@@ -38,7 +38,10 @@
       <!-- Room View (Hidden initially) -->
       <div id="room-view" class="hidden space-y-6">
         <div class="flex justify-between items-center">
-          <h2 class="text-2xl font-bold">Room <span id="room-id-display" class="font-mono text-emerald-400">...</span></h2>
+          <div class="flex flex-col">
+            <h2 class="text-2xl font-bold">Room <span id="room-id-display" class="font-mono text-emerald-400">...</span></h2>
+            <button id="leave-btn" class="text-xs text-red-500 hover:text-red-400 text-left underline mt-1">Leave Room</button>
+          </div>
           <span id="status-badge" class="px-3 py-1 bg-yellow-500/20 text-yellow-500 text-xs rounded-full uppercase tracking-wider font-bold">Waiting</span>
         </div>
 

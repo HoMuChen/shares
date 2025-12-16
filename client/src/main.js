@@ -18,6 +18,7 @@ const progressBar = document.getElementById('progress-bar');
 const transferStatus = document.getElementById('transfer-status');
 const transferPercent = document.getElementById('transfer-percent');
 const downloadsArea = document.getElementById('downloads-area');
+const leaveBtn = document.getElementById('leave-btn');
 
 let p2pConnection;
 let currentRoomId;
@@ -29,6 +30,40 @@ const roomParam = urlParams.get('room');
 if (roomParam) {
     joinRoom(roomParam);
 }
+
+leaveBtn.addEventListener('click', () => {
+    // 1. Disconnect Socket
+    if (socket.connected) {
+        socket.disconnect();
+    }
+
+    // 2. Close WebRTC
+    if (p2pConnection) {
+        if (p2pConnection.peerConnection) {
+            p2pConnection.peerConnection.close();
+        }
+        if (p2pConnection.dataChannel) {
+            p2pConnection.dataChannel.close();
+        }
+        p2pConnection = null;
+    }
+
+    // 3. Reset UI
+    currentRoomId = null;
+    downloadsArea.innerHTML = ''; // Clear downloads
+    progressArea.classList.add('hidden');
+    document.getElementById('share-info').classList.remove('hidden'); // Show QR again next time
+    joinInput.value = '';
+
+    // 4. Update URL (remove ?room=...)
+    const url = new URL(window.location);
+    url.searchParams.delete('room');
+    window.history.pushState({}, '', url);
+
+    // 5. Switch Views
+    roomView.classList.add('hidden');
+    landingView.classList.remove('hidden');
+});
 
 createBtn.addEventListener('click', () => {
     // crypto.randomUUID() requires HTTPS. Check availability or use fallback.
